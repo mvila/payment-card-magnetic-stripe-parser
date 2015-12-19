@@ -12,7 +12,7 @@ export function parsePaymentCardMagneticStripe(data = '') {
     if (result.card) cards.push(result.card);
     if (result.error) errors.push(result.error);
   }
-  if (!cards.length) errors.push(new Error('No card information found'));
+  if (!cards.length) errors.push(new Error('No payment card information found'));
   return { cards, errors };
 }
 
@@ -23,7 +23,7 @@ function parseTrack(track) {
       // Ex.: %B1234123412341234^DUPONT/JEAN.MR^1709701000000000000000286000000?
       track = track.slice(2);
       let parts = track.split('^');
-      if (parts.length !== 3) throw new Error('Invalid track');
+      if (parts.length !== 3) throw new Error('Invalid payment card track');
       number = parseNumber(parts[0]);
       expirationDate = parseExpirationDate(parts[2]);
       holder = parseHolder(parts[1]);
@@ -31,7 +31,7 @@ function parseTrack(track) {
       // Ex.: ;1234123412341234=17092017370374292421?
       track = track.slice(1);
       let parts = track.split('=');
-      if (parts.length !== 2) throw new Error('Invalid track');
+      if (parts.length !== 2) throw new Error('Invalid payment card track');
       number = parseNumber(parts[0]);
       expirationDate = parseExpirationDate(parts[1]);
       holder = parseHolder('');
@@ -44,14 +44,18 @@ function parseTrack(track) {
 
 function parseNumber(number) {
   if (!/^\d{10,19}$/.test(number)) {
-    throw new Error('Invalid credit card number');
+    throw new Error('Invalid payment card number');
   }
   return number;
 }
 
 function parseExpirationDate(date) {
   date = '20' + date.slice(0, 2) + '-' + date.slice(2, 4) + '-01T00:00:00.000';
-  date = new AbstractDate(date);
+  try {
+    date = new AbstractDate(date);
+  } catch (err) {
+    throw new Error('Invalid payment card expiration date');
+  }
   return date;
 }
 
