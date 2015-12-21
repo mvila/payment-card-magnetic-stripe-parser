@@ -1,6 +1,6 @@
 {
   "name": "payment-card-magnetic-stripe-parser",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Parse payment card magnetic stripe data",
   "author": "Manuel Vila <mvila@3base.com>",
   "license": "MIT",
