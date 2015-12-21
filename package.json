@@ -19,9 +19,7 @@
     "lint": "eslint .",
     "test": "mocha --compilers js:babel/register"
   },
-  "dependencies": {
-    "abstract-date": "^0.2.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-eslint": "^4.1.3",

@@ -1,7 +1,5 @@
 'use strict';
 
-import { AbstractDate } from 'abstract-date';
-
 export function parsePaymentCardMagneticStripe(data = '') {
   let cards = [];
   let errors = [];
@@ -50,12 +48,19 @@ function parseNumber(number) {
 }
 
 function parseExpirationDate(date) {
-  date = '20' + date.slice(0, 2) + '-' + date.slice(2, 4) + '-01T00:00:00.000';
-  try {
-    date = new AbstractDate(date);
-  } catch (err) {
-    throw new Error('Invalid payment card expiration date');
-  }
+  let year = date.slice(0, 2);
+  if (!/^\d\d$/.test(year)) throw new Error('Invalid payment card expiration year');
+  year = '20' + year;
+
+  let month = date.slice(2, 4);
+  if (!/^\d\d$/.test(month)) throw new Error('Invalid payment card expiration month');
+  month = Number(month);
+  if (month < 1 || month > 12) throw new Error('Invalid payment card expiration month');
+  month = month.toString();
+  if (month.length === 1) month = '0' + month;
+
+  date = year + '-' + month;
+
   return date;
 }
 
